@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+    ServerAdmin webmaster@ {{ ansible_host }}
+    DocumentRoot /var/www/html
+
+    <Directory /var/www/html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+
+        # Setting DirectoryIndex
+        DirectoryIndex index.php index.html
+    </Directory>
+
+
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

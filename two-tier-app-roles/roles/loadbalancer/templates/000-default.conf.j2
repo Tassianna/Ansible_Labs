@@ -1,0 +1,17 @@
+<VirtualHost *:80>
+    ProxyRequests Off
+    ProxyPreserveHost On
+
+    <Proxy "balancer://mycluster">
+{% for host in groups['webservers'] %}
+        BalancerMember http://{{ hostvars[host]['ansible_host'] }}/
+{% endfor %}
+        ProxySet lbmethod=byrequests
+    </Proxy>
+
+    ProxyPass "/" "balancer://mycluster/"
+    ProxyPassReverse "/" "balancer://mycluster/"
+
+    ErrorLog \${APACHE_LOG_DIR}/error.log
+    CustomLog \${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

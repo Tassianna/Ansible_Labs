@@ -1,0 +1,29 @@
+- name: Copy index.php file and move to the server
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Create custom document root
+      file: path=/var/www/html state=directory owner=www-data group=www-data
+   
+    - name: Upload index.php file
+      copy:
+        src: ./config/index.php
+        dest: /var/www/html/index.php
+        mode: 0644
+
+    #link new configurations!
+    - name: Set up Apache virtual host file
+      ansible.builtin.template:
+        src: "{{ vhost_template }}"  # Use the variable that points to the correct template
+        dest: /etc/apache2/sites-available/000-default.conf
+      notify: restart apache
+      
+    - name: Enable the Apache virtual host configuration
+      ansible.builtin.command: a2ensite 000-default.conf
+      notify: restart apache
+
+  handlers:
+    - name: restart apache
+      ansible.builtin.systemd:
+        name: apache2
+        state: restarted

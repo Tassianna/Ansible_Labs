@@ -1,0 +1,38 @@
+- name: Manage multi servers
+  hosts: all
+  become: yes
+  vars:
+    package_name: 
+      pkg1: apache2
+      pkg2: nginx
+  tasks:
+    - name: Install multiple packages
+      apt:
+        name: "{{ item.value }}"
+        state: present
+        update_cache: yes
+      loop: "{{ package_name | dict2items }}"
+
+    - name: Enable and start Apache
+      service:
+        name: "{{ item.value }}"
+        state: started
+        enabled: yes
+      when: item == 'apache2'    #condition of loop!
+      loop: "{{ package_name | dict2items }}"
+
+    - name: Disable and stop Apache
+      service:
+        name: "{{ item.value }}"
+        state: stopped
+        enabled: no
+      when: item == 'apache2'    
+      loop: "{{ package_name | dict2items }}"
+
+    - name: Enable and start Nginx
+      service:
+        name: "{{ item.value }}"
+        state: started
+        enabled: yes
+      when: item == 'nginx'
+      loop: "{{ package_name | dict2items }}"

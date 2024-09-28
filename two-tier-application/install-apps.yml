@@ -1,0 +1,10 @@
+- name: Install load balancer and web servers
+  hosts: all
+  become: true
+  tasks:
+    - name: Install all apps server
+      apt:
+        name: "{{ apps }}"
+        state: present
+        update_cache: yes
+      become: true

@@ -1,0 +1,1 @@
+web1 ansible_host=18.171.53.180 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/tassianna/Desktop/london_key.pem

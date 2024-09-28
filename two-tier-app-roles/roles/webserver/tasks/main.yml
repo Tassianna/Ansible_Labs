@@ -1,0 +1,55 @@
+- name: Install Apache and PHP
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Create custom document root
+  file:
+    path: /var/www/html
+    state: directory
+    owner: www-data
+    group: www-data
+  become: true
+
+- name: Upload index.php file
+  copy:
+    src: ../files/index.php
+    dest: /var/www/html/index.php
+    mode: 0644
+  become: true
+
+- name: Set up Apache virtual host file
+  template:
+    src: ../templates/000-default.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+  notify: Restart Apache
+  become: true
+
+- name: Enable the Apache virtual host configuration
+  command: a2ensite 000-default.conf
+  notify: Restart Apache
+  become: true
+
+- name: Disable the default Apache virtual host
+  command: a2dissite 000-default.conf
+  notify: Restart Apache
+  become: true
+
+- name: Enable mod_rewrite
+  apache2_module:
+    name: rewrite
+    state: present
+  notify: Restart Apache
+  become: true
+
+- name: Ensure DirectoryIndex has index.php first in dir.conf
+  lineinfile:
+    path: /etc/apache2/mods-enabled/dir.conf
+    regexp: '^(\s*DirectoryIndex\s+).*'
+    line: '    DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm'
+    backup: yes
+  notify: Restart Apache
+  become: true
+

@@ -1,0 +1,4 @@
+apps: 
+  - apache2
+  - php
+  

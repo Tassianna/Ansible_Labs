@@ -1,0 +1,41 @@
+- name: Install Apache
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  become: true
+
+- name: Enable required Apache modules
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - proxy
+    - proxy_http
+    - proxy_balancer
+    - lbmethod_byrequests
+  notify: Restart Apache
+  become: true
+
+- name: Configure load balancer virtual host
+  template:
+    src: ../templates/000-default.conf.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+  notify: Restart Apache
+  become: true
+
+- name: Enable the Apache virtual host configuration
+  command: a2ensite 000-default.conf
+  notify: Restart Apache
+  become: true
+
+- name: Disable the default Apache virtual host
+  command: a2dissite 000-default.conf
+  notify: Restart Apache
+  become: true
+
+
+
+
+
+

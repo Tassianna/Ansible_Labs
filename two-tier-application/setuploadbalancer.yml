@@ -1,0 +1,38 @@
+- name: Copy config file in load balancer
+  hosts: loadbalancer
+  tasks:
+    - name: Upload config file in load balancer
+      copy:
+        src: ./config/loadbalancer.conf
+        dest: /etc/apache2/sites-available/000-default.conf
+        mode: 0755
+      become: true
+      notify: Restart apache server
+      
+    - name: Enable mod_proxy
+      ansible.builtin.command: a2enmod proxy
+      become: true
+      notify: Restart apache server
+
+    - name: Enable mod_proxy_http
+      ansible.builtin.command: a2enmod proxy_http
+      become: true
+      notify: Restart apache server
+
+    - name: Enable mod_proxy_balancer
+      ansible.builtin.command: a2enmod proxy_balancer
+      become: true
+      notify: Restart apache server
+
+    - name: Enable lbmethod_byrequests
+      ansible.builtin.command: a2enmod lbmethod_byrequests
+      become: true
+      notify: Restart apache server
+
+  handlers:
+    - name: Restart apache server
+      service:
+        name: apache2
+        state: restarted
+      become: true
+
