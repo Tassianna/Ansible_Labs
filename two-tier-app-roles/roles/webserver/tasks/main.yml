@@ -14,7 +14,7 @@
   become: true
 
 - name: Upload index.php file
-  copy:
+  template:
     src: ../files/index.php
     dest: /var/www/html/index.php
     mode: 0644

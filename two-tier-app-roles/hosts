@@ -1,7 +1,7 @@
 [webservers]
-web2 ansible_host=3.9.165.126 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/tassianna/Desktop/london_key.pem
-web1 ansible_host=3.9.16.32 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/tassianna/Desktop/london_key.pem
+web2 ansible_host=18.133.220.98 num=2 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/tassianna/Desktop/london_key.pem
+web1 ansible_host=18.170.35.127 num=1 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/tassianna/Desktop/london_key.pem
 
 
 [loadbalancer]
-lb ansible_host=18.170.52.164 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/tassianna/Desktop/london_key.pem
+lb ansible_host=3.8.114.102 ansible_user=ubuntu ansible_ssh_private_key_file=/Users/tassianna/Desktop/london_key.pem
